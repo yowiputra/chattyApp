@@ -2,12 +2,8 @@ import React, {Component} from 'react';
 
 class Message extends Component {
   render() {
-    const messageUserName = this.props.messageContent.map((message)=>{
-      return <span className="message-username" key={message.id}>{message.username}</span>
-    });
-    const messageContent = this.props.messageContent.map((message)=>{
-      return <span className="message-content" key={message.id}>{message.content}</span>
-    });
+    const messageUserName = <span className="message-username">Bob</span>;
+    const messageContent = <span className="message-content">Has anyone seen my marbles?</span>;
 
     return (
       <div className="message">
