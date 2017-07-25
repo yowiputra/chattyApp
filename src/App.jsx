@@ -18,7 +18,6 @@ class App extends Component {
 
   constructor(){
     super();
-
     this.state = {
       currentUser: {name: "Bob"}, // optional. if currentUser is not defined, it means the user is Anonymous
       messages: [
@@ -33,7 +32,13 @@ class App extends Component {
           content: "No, I think you lost them. You lost your marbles Bob. You lost them for good."
         }
       ]
-    }
+    };
+    this.addMessage = this.addMessage.bind(this);
+  }
+
+  addMessage(newMessage){
+    const updatedMessages = this.state.messages.concat(newMessage);
+    this.setState({messages: updatedMessages});
   }
 
   render() {
@@ -43,7 +48,7 @@ class App extends Component {
           <a href="/" className="navbar-brand">Chatty</a>
         </nav>
         <MessageList messages={this.state.messages}/>
-        <ChatBar currentUser={this.state.currentUser}/>
+        <ChatBar currentUser={this.state.currentUser} addMessage={this.addMessage}/>
       </body>
     );
   }
