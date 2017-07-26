@@ -18,7 +18,6 @@ class ChatBar extends Component {
 
   createNewMessage(){
     return {
-      id: Math.random(),
       username: this.state.username,
       content: this.state.content
     }

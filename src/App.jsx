@@ -2,55 +2,47 @@ import React, {Component} from 'react';
 import MessageList from './MessageList.jsx';
 import ChatBar from './ChatBar.jsx';
 
+const ws = new WebSocket("ws://0.0.0.0:3001");
+
 class App extends Component {
   componentDidMount() {
     console.log("componentDidMount <App />");
-    setTimeout(() => {
-      console.log("Simulating incoming message");
-      // Add a new message to the list of messages in the data store
-      const newMessage = {id: 3, username: "Michelle", content: "Hello there!"};
-      const messages = this.state.messages.concat(newMessage)
-      // Update the state of the app component.
-      // Calling setState will trigger a call to render() in App and all child components.
-      this.setState({messages: messages})
-    }, 3000);
+    ws.onopen = function(event){
+      console.log('Connected to server');
+    };
+    ws.onmessage = this.receiveMessage;
   }
 
   constructor(){
     super();
     this.state = {
       currentUser: {name: "Bob"}, // optional. if currentUser is not defined, it means the user is Anonymous
-      messages: [
-        {
-          id: 1,
-          username: "Bob",
-          content: "Has anyone seen my marbles?"
-        },
-        {
-          id: 2,
-          username: "Anonymous",
-          content: "No, I think you lost them. You lost your marbles Bob. You lost them for good."
-        }
-      ],
-      error: ''
+      messages: []
     };
     this.addMessage = this.addMessage.bind(this);
+    this.receiveMessage = this.receiveMessage.bind(this);
+  }
+
+  receiveMessage(event){
+    console.log(`RECEIVE: ${JSON.parse(event.data)}`);
+    const updatedMessages = this.state.messages.concat(JSON.parse(event.data));
+    this.setState({messages: updatedMessages});
   }
 
   addMessage(newMessage){
-    const updatedMessages = this.state.messages.concat(newMessage);
-    this.setState({messages: updatedMessages});
+    console.log(`SEND: ${JSON.stringify(newMessage)}`);
+    ws.send(JSON.stringify(newMessage));
   }
 
   render() {
     return (
-      <body>
+      <div>
         <nav className="navbar">
           <a href="/" className="navbar-brand">Chatty</a>
         </nav>
         <MessageList messages={this.state.messages}/>
         <ChatBar currentUser={this.state.currentUser} addMessage={this.addMessage}/>
-      </body>
+      </div>
     );
   }
 }
