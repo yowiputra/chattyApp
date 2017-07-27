@@ -19,7 +19,8 @@ class App extends Component {
     this.state = {
       currentUser: {name: "Bob"},
       messages: [],
-      notifContent: ''
+      notifContent: '',
+      countText:''
     };
     this.addMessage = this.addMessage.bind(this);
     this.changeName = this.changeName.bind(this);
@@ -47,9 +48,20 @@ class App extends Component {
         const updatedMessages = this.state.messages.concat(receivedData);
         this.setState({messages: updatedMessages});
         break;
+
       case "incomingNotification":
         this.setState({notifContent: receivedData.content});
         break;
+
+      case "connectedUserCount":
+        const count = receivedData.count;
+        let userText = 'users';
+        if(count === 1){
+          userText = 'user';
+        }
+        this.setState({countText: `${count.toString()} ${userText} online`});
+        break;
+
       default:
         throw new Error("Unknown event type " + data.type);
     };
@@ -60,6 +72,7 @@ class App extends Component {
       <div>
         <nav className="navbar">
           <a href="/" className="navbar-brand">Chatty</a>
+          <span className="navbar-count">{this.state.countText}</span>
         </nav>
         <MessageList messages={this.state.messages} receivedNotif={this.state.notifContent}/>
         <ChatBar currentUser={this.state.currentUser} addMessage={this.addMessage} changeName={this.changeName}/>
