@@ -20,7 +20,8 @@ class ChatBar extends Component {
     return {
       type: "postMessage",
       username: this.props.currentUser.name,
-      content: this.state.content
+      content: this.state.content,
+      userColor: this.props.userColor
     }
   }
 

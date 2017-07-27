@@ -6,7 +6,7 @@ class Message extends Component {
   }
 
   render() {
-    const messageUserName = <span className="message-username">{this.props.username}</span>;
+    const messageUserName = <span className="message-username" style={{color: this.props.color}}>{this.props.username}</span>;
     const messageContent = <span className="message-content">{this.props.content}</span>;
     return (
       <div className="message" key={this.props.id}>

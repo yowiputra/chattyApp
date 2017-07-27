@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import MessageList from './MessageList.jsx';
 import ChatBar from './ChatBar.jsx';
+import randomHexColor from 'random-hex-color';
 
 const ws = new WebSocket("ws://0.0.0.0:3001");
 
@@ -20,7 +21,8 @@ class App extends Component {
       currentUser: {name: "Bob"},
       messages: [],
       notifContent: '',
-      countText:''
+      countText: '',
+      userColor: randomHexColor()
     };
     this.addMessage = this.addMessage.bind(this);
     this.changeName = this.changeName.bind(this);
@@ -37,7 +39,9 @@ class App extends Component {
       content: `${this.state.currentUser.name} has changed their name to ${newName}`
     }
     ws.send(JSON.stringify(notif));
-    this.setState({currentUser: {name: newName}});
+    this.setState({
+      currentUser: {name: newName},
+    });
   }
 
   handleOnMessage(event){
@@ -46,7 +50,10 @@ class App extends Component {
     switch(receivedData.type){
       case "incomingMessage":
         const updatedMessages = this.state.messages.concat(receivedData);
-        this.setState({messages: updatedMessages});
+        this.setState({
+          messages: updatedMessages,
+          notifContent: ''
+        });
         break;
 
       case "incomingNotification":
@@ -63,7 +70,7 @@ class App extends Component {
         break;
 
       default:
-        throw new Error("Unknown event type " + data.type);
+        throw new Error("Unknown event type " + receivedData.type);
     };
   }
 
@@ -75,7 +82,7 @@ class App extends Component {
           <span className="navbar-count">{this.state.countText}</span>
         </nav>
         <MessageList messages={this.state.messages} receivedNotif={this.state.notifContent}/>
-        <ChatBar currentUser={this.state.currentUser} addMessage={this.addMessage} changeName={this.changeName}/>
+        <ChatBar currentUser={this.state.currentUser} addMessage={this.addMessage} changeName={this.changeName} userColor={this.state.userColor}/>
       </div>
     );
   }

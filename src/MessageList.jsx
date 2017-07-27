@@ -7,14 +7,15 @@ class MessageList extends Component {
       return <Message
         key={message.id}
         username={message.username}
-        content={message.content}/>
+        content={message.content}
+        color={message.userColor}/>
     });
 
     return (
       <main className="messages">
         {messages}
         <div className="message system">
-          <span key={this.props.receivedNotif.id}>{this.props.receivedNotif}</span>
+          <span>{this.props.receivedNotif}</span>
         </div>
       </main>
     );
