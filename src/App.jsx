@@ -22,7 +22,7 @@ class App extends Component {
       notifContent: ''
     };
     this.addMessage = this.addMessage.bind(this);
-    this.addNotification = this.addNotification.bind(this);
+    this.changeName = this.changeName.bind(this);
     this.handleOnMessage = this.handleOnMessage.bind(this);
   }
 
@@ -30,8 +30,13 @@ class App extends Component {
     ws.send(JSON.stringify(newMessage));
   }
 
-  addNotification(newNotif){
-    ws.send(JSON.stringify(newNotif));
+  changeName(newName){
+    const notif = {
+      type: "postNotification",
+      content: `${this.state.currentUser.name} has changed their name to ${newName}`
+    }
+    ws.send(JSON.stringify(notif));
+    this.setState({currentUser: {name: newName}});
   }
 
   handleOnMessage(event){
@@ -47,7 +52,7 @@ class App extends Component {
         break;
       default:
         throw new Error("Unknown event type " + data.type);
-    }
+    };
   }
 
   render() {
@@ -57,7 +62,7 @@ class App extends Component {
           <a href="/" className="navbar-brand">Chatty</a>
         </nav>
         <MessageList messages={this.state.messages} receivedNotif={this.state.notifContent}/>
-        <ChatBar currentUser={this.state.currentUser} addMessage={this.addMessage} addNotif={this.addNotification}/>
+        <ChatBar currentUser={this.state.currentUser} addMessage={this.addMessage} changeName={this.changeName}/>
       </div>
     );
   }

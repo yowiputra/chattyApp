@@ -9,8 +9,7 @@ class ChatBar extends Component {
     super();
     this.state = {
       username: props.currentUser.name,
-      content: '',
-      notifContent: ''
+      content: ''
     };
     this.messageContentChangeHandler = this.messageContentChangeHandler.bind(this);
     this.enterMessageContentHandler = this.enterMessageContentHandler.bind(this);
@@ -20,15 +19,8 @@ class ChatBar extends Component {
   createNewMessage(){
     return {
       type: "postMessage",
-      username: this.state.username,
+      username: this.props.currentUser.name,
       content: this.state.content
-    }
-  }
-
-  createNewNotif(){
-    return {
-      type: "postNotification",
-      content: this.state.notifContent
     }
   }
 
@@ -40,11 +32,7 @@ class ChatBar extends Component {
       } else {
         name = event.target.value;
       }
-      this.setState({
-        username: name,
-        notifContent: `${this.state.username} has changed their name to ${name}`
-      });
-      this.props.addNotif(this.createNewNotif());
+      this.props.changeName(name);
     }
   }
 
