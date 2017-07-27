@@ -14,6 +14,7 @@ class MessageList extends Component {
       <main className="messages">
         {messages}
         <div className="message system">
+          <span key={this.props.receivedNotif.id}>{this.props.receivedNotif}</span>
         </div>
       </main>
     );

@@ -9,35 +9,50 @@ class ChatBar extends Component {
     super();
     this.state = {
       username: props.currentUser.name,
-      content: ''
+      content: '',
+      notifContent: ''
     };
-    this.userNameChangeHandler = this.userNameChangeHandler.bind(this);
-    this.contentChangeHandler = this.contentChangeHandler.bind(this);
-    this.keyDownHandler = this.keyDownHandler.bind(this);
+    this.messageContentChangeHandler = this.messageContentChangeHandler.bind(this);
+    this.enterMessageContentHandler = this.enterMessageContentHandler.bind(this);
+    this.enterUserNameHandler = this.enterUserNameHandler.bind(this);
   }
 
   createNewMessage(){
     return {
+      type: "postMessage",
       username: this.state.username,
       content: this.state.content
     }
   }
 
-  userNameChangeHandler(event){
-    let name = '';
-    if(!event.target.value){
-      name = 'Anonymous';
-    } else {
-      name = event.target.value;
+  createNewNotif(){
+    return {
+      type: "postNotification",
+      content: this.state.notifContent
     }
-    this.setState({username: name});
   }
 
-  contentChangeHandler(event){
+  enterUserNameHandler(event){
+    if (event.key === 'Enter'){
+      let name = '';
+      if(!event.target.value){
+        name = 'Anonymous';
+      } else {
+        name = event.target.value;
+      }
+      this.setState({
+        username: name,
+        notifContent: `${this.state.username} has changed their name to ${name}`
+      });
+      this.props.addNotif(this.createNewNotif());
+    }
+  }
+
+  messageContentChangeHandler(event){
     this.setState({content: event.target.value});
   }
 
-  keyDownHandler(event){
+  enterMessageContentHandler(event){
     if (event.key === 'Enter'){
       this.props.addMessage(this.createNewMessage());
       event.target.value = '';
@@ -50,13 +65,13 @@ class ChatBar extends Component {
       className="chatbar-username"
       placeholder="Your Name (Optional)"
       defaultValue={this.props.currentUser.name}
-      onChange={this.userNameChangeHandler}/>;
+      onKeyDown={this.enterUserNameHandler}/>;
 
     const messageInput = <input
       className="chatbar-message"
       placeholder="Type a message and hit ENTER"
-      onChange={this.contentChangeHandler}
-      onKeyDown={this.keyDownHandler}/>;
+      onChange={this.messageContentChangeHandler}
+      onKeyDown={this.enterMessageContentHandler}/>;
 
     return(
       <footer className="chatbar">
