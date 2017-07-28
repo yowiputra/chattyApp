@@ -4,7 +4,7 @@ chattyApp
 A group-chat app based on Slack. Built on React, WebPack, WebSocket and Sass.
 
 ### Screenshots
-![Screenshot of the chatroom]()
+![Screenshot of the chatroom](https://github.com/yowiputra/chattyApp/blob/master/docs/chatroom.png)
 
 ### Usage
 
